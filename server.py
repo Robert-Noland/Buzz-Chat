@@ -5,34 +5,39 @@ import threading
 hostname = socket.gethostname()
 ip = socket.gethostbyname(hostname)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 server.bind((ip,5555))
-server.listen()
+server.listen(5)
 
 
-#List of the clients that are connecting and their respective usernames
-global clients
-clients = []
-usernames = []
+#Clients dict used to store info about client connection
+#global clients
+clients = {}
+#usernames = []
 
 
+#adding this to move the commented section under receive to here
+def handle_clients(conn)
 
 #Recieve method 
 def receive():
     while True:
-        client, address = server.accept()
+        msg = conn.recv(1024)
+        broadcast(msg, name + ":")
+        #client, address = server.accept()
         # Asks the clients for their Usernames
-        client.send('USERNAME'.encode('ascii'))
-        username = client.recv(1024).decode('ascii')
-        print(f"Connected with {username} {str(address)}")
+        #client.send('USERNAME'.encode('ascii'))
+        #username = client.recv(1024).decode('ascii')
+        #print(f"Connected with {username} {str(address)}")
+    
         
 
-        usernames.append(username)
-        clients.append(client)
+        #usernames.append(username)
+        #clients.append(client)
 #Broadcasting Method
-def broadcast():
+def broadcast(msg, prefix=""):
     for client in clients:
-        message = client.recv(1024).decode('utf-8')
-        client.send(message)
+        client.send(bytes(prefix,"utf-8") + msg)
        
 
 

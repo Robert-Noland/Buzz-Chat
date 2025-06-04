@@ -26,7 +26,7 @@ def sending_messages():
         client.send(msg.encode('utf-8'))
         if not msg:
          print(f"Error sending message")
-         client.close()
+         break
          
 join_server()
       
